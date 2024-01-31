@@ -1,10 +1,12 @@
-version: '3.11'
+# version: '3.11'
 
-services:
-  app:
-    build: .
-    command: uvicorn main:app --host 0.0.0.0 
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
+# services:
+#   app:
+#     build: .
+#     command: uvicorn main:app --host 0.0.0.0 
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - .:/app
+
+# Borre el docker-compose porque en la build en railway no funciono. 

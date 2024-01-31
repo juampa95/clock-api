@@ -1,7 +1,9 @@
+import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from recursos.caracteres import letras
 from starlette.responses import RedirectResponse
+
 
 
 def frase(palabras):
@@ -46,10 +48,36 @@ async def obtener_matriz(letra: str):
         return {"error": "Letra no encontrada"}
 
 
+# @app.get("/procesar_palabras/{palabras}")
+# async def procesar_palabras(palabras: str):
+#     # Dividir la cadena de palabras en palabras individuales
+#     palabras_lista = palabras.split()
+#     # Aplicar la función 'frase' a cada palabra individual
+#     resultado = frase(palabras_lista)
+#     return {"resultado": resultado}
+
+# Endpoint para procesar palabras y guardar la respuesta en un archivo JSON
 @app.get("/procesar_palabras/{palabras}")
 async def procesar_palabras(palabras: str):
     # Dividir la cadena de palabras en palabras individuales
     palabras_lista = palabras.split()
     # Aplicar la función 'frase' a cada palabra individual
     resultado = frase(palabras_lista)
-    return {"resultado": resultado}
+
+    # Guardar la respuesta en un archivo JSON
+    with open("respuesta.json", "w") as json_file:
+        json.dump({"resultado": resultado}, json_file)
+
+    return {"mensaje": "Respuesta guardada en respuesta.json"}
+
+
+# Endpoint para consultar el contenido del archivo JSON
+@app.get("/consultar_respuesta_json")
+async def consultar_respuesta_json():
+    try:
+        # Leer el contenido del archivo JSON
+        with open("respuesta.json", "r") as json_file:
+            data = json.load(json_file)
+        return data
+    except FileNotFoundError:
+        return {"message": "El archivo JSON no existe"}
